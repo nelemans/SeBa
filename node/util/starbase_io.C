@@ -101,6 +101,11 @@ real starbase::get_relative_age() {return 0;}
 real starbase::get_relative_mass() {return 0;}
 real starbase::get_evolve_timestep() {return 0;}
 
+void starbase::set_relative_age(real a) {}
+void starbase::set_core_mass(real a) {}
+void starbase::set_COcore_mass(real a) {}
+void starbase::set_effective_radius(real a) {}
+
 real starbase::get_rotation_period() {return 0;}
 void starbase::set_rotation_period(real a) {}
 real starbase::get_fallback() {return 0;}
@@ -123,6 +128,7 @@ void starbase::set_semi(real a) {}
 real starbase::get_eccentricity()    {return 0;}
 void starbase::set_eccentricity(real e)    {}
 binary_type starbase::get_bin_type() {return Unknown_Binary_Type;}
+mass_transfer_type starbase::get_current_mass_transfer_type() {return Unknown;}
 
 real starbase::add_mass_to_accretor(real, bool, const real) {return 0;}
 star* starbase::subtrac_mass_from_donor(const real, real&){return NULL;}

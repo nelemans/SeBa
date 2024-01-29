@@ -93,6 +93,11 @@ class  starbase
         virtual real get_relative_age();
         virtual real get_relative_mass();
 
+        virtual void set_relative_age(real);
+        virtual void set_core_mass(real);
+        virtual void set_COcore_mass(real);
+        virtual void set_effective_radius(real);
+
         virtual real get_rotation_period();
         virtual void set_rotation_period(real);
         virtual real get_fallback();
@@ -110,6 +115,7 @@ class  starbase
         virtual real sudden_mass_loss();
 
         virtual binary_type get_bin_type();
+        virtual mass_transfer_type get_current_mass_transfer_type();
         virtual real get_semi();
         virtual void set_semi(real);
         virtual real get_eccentricity();
