@@ -366,13 +366,15 @@ void double_star::dump(ostream & s, bool brief) {
 
       if(bin_type!=Merged) {
 
-      int n_elements = no_of_elements();
+	// (GN Feb 2025): if one star is disrupted, no_of_elements returns 1, while two stars are printed
+	//      int n_elements = no_of_elements();
+      int n_elements = 2;
 
       s << n_elements
         << "\n " << identity
 	<< " " << bin_type
         << " " << binary_age
-        << " " << bin_type
+        << " " << current_mass_transfer_type
         << " " << eccentricity
         << " " << get_period()
         << " " << semi
@@ -1269,11 +1271,14 @@ void double_star::recursive_binary_evolution(real dt,
       star* donor    = get_primary();
       star* accretor = get_secondary();
 
+      //PRC(rl_p);PRC(rp);PRC(rl_s);PRL(rs);
+      
       // Primary fills Roche-lobe?
       if (rp >= rl_p) {
 	get_primary()->set_spec_type(Rl_filling);
 	get_primary()->set_spec_type(Accreting, false);
 	get_secondary()->set_spec_type(Accreting);
+	donor->set_effective_radius(rl_p);
       }
       else
 	get_primary()->set_spec_type(Rl_filling, false);
@@ -1287,6 +1292,7 @@ void double_star::recursive_binary_evolution(real dt,
 	get_secondary()->set_spec_type(Rl_filling);
 	get_secondary()->set_spec_type(Accreting, false);
 	get_primary()->set_spec_type(Accreting);
+	donor->set_effective_radius(rl_s);
 
 	// One could check here for contact binary to cause
 	// the secondary to be the donor.
@@ -1324,7 +1330,7 @@ void double_star::recursive_binary_evolution(real dt,
 	  // (SilT Nov 25 2012)
    	  // Goes wrong when first stable mass transfer. Need to set in ::contact_binary...
       // bin_type = Contact;
-	  // first_contact=true;
+	   first_contact=true;
 
 	    if (REPORT_RECURSIVE_EVOLUTION)
 	      cerr << "\tFirst contact" << endl;
@@ -1479,7 +1485,8 @@ void double_star::recursive_binary_evolution(real dt,
 	  set_effective_radius(get_secondary()->get_radius());
 
 	current_mass_transfer_type = Unknown;
-
+	first_contact = false;
+	
 	refresh_memory();
 
 	real max_dt = end_time - binary_age;
@@ -2514,6 +2521,7 @@ real double_star::zeta(star * donor,
        real dt = md_dot * md_timescale/donor->get_relative_mass();
        real ma_dot = accretor->accretion_limit(md_dot, dt);
 
+       //PRC(md_dot);PRL(ma_dot);
        real M_old = get_total_mass();
        real old_donor_mass = donor->get_total_mass();
        real old_accretor_mass = accretor->get_total_mass();

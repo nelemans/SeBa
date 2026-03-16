@@ -10,7 +10,7 @@
 // Only to make SPZDCH star known to this file 
 #include "SPZDCH_star.h"
 
-#define REPORT_MASS_TRANSFER_TIMESCALE false
+#define REPORT_MASS_TRANSFER_TIMESCALE true
 
 single_star * new_single_star(stellar_type type,	// All defaults are
 			      int  id,			// now specified in
@@ -724,7 +724,7 @@ real single_star::accretion_limit(const real mdot, const real dt) {
 
   if (dt < 0) return mdot;
   // Conservative mass transfer.
-//  return mdot;
+  //return mdot;
 
   // Non-conservative mass transfer.
   // Based on Pols & Marinus,1994, A&A,288, 475
@@ -736,7 +736,9 @@ real single_star::accretion_limit(const real mdot, const real dt) {
                  / pow(10, expansionB(relative_mass));
 
   accretion = max(accretion, 0.);
+  
   real mdot_max = mdot_kh*pow(accretion, 1./expansionA(relative_mass));
+  //PRC(mdot);PRC(mdot_kh);PRC(mdot_max);
   mdot_max = max(mdot_max, 0.);	
   return min(mdot, mdot_max);
 
@@ -972,7 +974,9 @@ real single_star::mass_transfer_timescale(mass_transfer_type &type) {
   if (is_binary_component()) {
 
     z_l_ad = get_binary()->zeta(this, get_companion(), kelvin_helmholds_timescale());
+    //PRC(kelvin_helmholds_timescale());PRL(z_l_ad);
     z_l_th = get_binary()->zeta(this, get_companion(), nucleair_evolution_timescale());
+    //PRC(nucleair_evolution_timescale());PRL(z_l_th);
   }
 
   real z_ad = zeta_adiabatic();
@@ -1058,7 +1062,8 @@ real single_star::zeta_adiabatic() {
     r_dconv = 5.24*pow(relative_mass,1.32);
   else if (relative_mass > 5)
     r_dconv = 1.33*pow(relative_mass,1.93);
-    
+  
+  r_dconv = 0; // switch off (GN 2025)
   if (radius < r_dconv) {
     return 12.25;
 //    cerr << "radius < r_dconv" << endl;
@@ -1077,7 +1082,8 @@ real single_star::zeta_adiabatic() {
 //    z = -cnsts.mathematics(one_third);
 //  else 
     return A + x*(B + x*(C + x*(D + x*E)));
-
+    // Test something like Ge et al. 2020 results (their fig 9)
+    //return 10*x - 1;
   }
 
 }

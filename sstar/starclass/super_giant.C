@@ -415,6 +415,9 @@ real super_giant::zeta_adiabatic() {
 //  else 
     return A + x*(B + x*(C + x*(D + x*E)));
 
+    // Test something like Ge et al. 2020 results (their fig 9)
+    //return 10*x - 1;
+
 }
 
 
@@ -426,7 +429,9 @@ real super_giant::zeta_thermal() {
 
   real z = 0.; // (GN+SPZ Apr 29 1999) was -10 in 1998; 
                // was -0.64 somewhere in the past (~1992 or so).
-
+  // (GN Jan 2025) test method to ensure thermal time scale mass transfer until radius back to equilibrium radius
+  if (effective_radius < 0.98*radius) z = -10;
+ 
       return z;
    }
 

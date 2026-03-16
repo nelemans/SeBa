@@ -1,7 +1,6 @@
-//// SeBa:        Binary evolution program SeBa.
-////              computes the evolution of a binary given any 
-////              initial conditions (M, m, a, e).
-////             
+//// pop_SeBa:    Computes the evolution of a population of stars
+////              from distribution of initial parameters and formation times
+///
 //// Output:      in the form of the following files:
 ////              -init.dat           contains selected initial conditons.
 ////              -SeBa.data           contains binary evolution histories
@@ -14,20 +13,12 @@
 ////              - mass of its binary companion (secondary star)
 ////              - semi-major axis of the binary system
 ////              - orbital eccentricity
+////              - metallicity
 ////
 ////              routines incuded can be found in double_star.h.
 ////              The mass function routines are adoped from mkmass.C
 ////              and are defined in starbase.h
 //// 
-////              externally visible routines are:
-////              -get_random_mass_ratio
-////              -get_random_semi_major_axis
-////              -get_random_eccentricity
-////              The two utilities for the various parameter are:
-////              -extract_...._distribution_type_string(....)
-////              and
-////              -type_string(char*)
-////
 ////              The executable takes initial conditions (see Options)
 ////              and returns randomized binary parameters.                 
 ////                 
@@ -76,7 +67,7 @@
 ////
 ////            -I select input file for reading initial conditions.
 ////               -uses: double_star::dump as input format.  [no default]
-////            -R select random initial conditions    [false]
+////            -R select random initial conditions    [true]
 ////               with parameters as discribed above.   
 ////            -n number of binaries to be simulated.  [1]
 ////               Options: -I all binaries in input file are computed.
@@ -84,23 +75,17 @@
 ////                        oterwise one binary is simulated with
 ////                        -M, -m, -a, -e as initial conditions.
 ////            -N initial ID number of first simulated binary 
-////            -T or -t  binary end time. [13500] Myr
+////            -t minimum time [0] Myr
+////            -T binary end time or maximum time. [13500] Myr
 ////            -s Random seed
-////            -z select metallicity of binaries to be simulated. [0.02] Solar
+////            -z select metallicity of binaries to be simulated or minimum z. [0.02] Solar
+////            -Z maximum z [0.03]
 ////            -C Initial stellar type primary star [default is main_sequence]
 ////            -c Initial stellar type secondary star [default is main_sequence]
 //   Note:  libnode.a is referenced for the routines which produce the 
 //          mass function
 //
-//	version 1.0	Simon Portegies Zwart, Utrecht, 1992
-//                      -First version with class structure
-//	version 2.0	Simon Portegies Zwart, Utrecht, 1994
-//                      -Coupling to starlab
-//	version 3.0	Simon Portegies Zwart, Amsterdam, June 1997
-//	version 3.3	Simon Portegies Zwart, Cambridge, March 1999
-//      version ...     Simon Portegies Zwart, lost track....
-//	version 4.0	Simon Portegies Zwart, Amsterdam, February 2003
-//
+
 
 #include "dyn.h" 
 #include "double_star.h"
@@ -158,7 +143,7 @@ local bool  evolve_binary(dyn * bi,
   
   //char SeBa_outfile[] = "SeBa.data";
   //char SeBa_outfile[] = SeBa_Filename();
-  ds->dump(SeBa_outfile, true);
+  //ds->dump(SeBa_outfile, false);
 
   if (!bi->is_root() &&
       bi->get_parent()->is_root()) 
@@ -184,7 +169,7 @@ local bool  evolve_binary(dyn * bi,
     }
     while (time<end_time);
 
-  ds->dump(SeBa_outfile, true);
+  ds->dump(SeBa_outfile, false);
   ds->set_star_story(NULL);
     
   rmtree(bi, false);
@@ -195,7 +180,7 @@ local bool  evolve_binary(dyn * bi,
 int main(int argc, char ** argv) {
 
     bool e_flag = false;
-    bool R_flag = false;
+    bool R_flag = true;
     bool F_flag = false;
     bool I_flag = false;
     bool O_flag = false;//doesn't work fully as "SeBa.data" is written in the code multiple times
@@ -248,6 +233,13 @@ int main(int argc, char ** argv) {
     real e_max = 1;
     real e_exp;
 
+    real t_min = 0;   
+    real t_max = 13800;
+    real z_min = 0.0001;   
+    real z_max = cnsts.parameters(Zsun);
+
+
+
     real start_time = 0;
     real end_time   = 13500;//35;
 
@@ -266,7 +258,7 @@ int main(int argc, char ** argv) {
 
     extern char *poptarg;
     int c;
-    const char *param_string = "n:N:RDSM:m:x:F:f:A:a:y:G:g:E:e:v:U:u:Q:q:T:t:I:O:w:P:p:n:s:z:C:c:";
+    const char *param_string = "n:N:RDSM:m:x:F:f:A:a:y:G:g:E:e:v:U:u:Q:q:T:t:I:O:w:P:p:n:s:z:Z:C:c:";
 
     while ((c = pgetopt(argc, argv, param_string)) != -1)
 	switch(c) {
@@ -313,8 +305,9 @@ int main(int argc, char ** argv) {
 		      break;
             case 'q': q_min = atof(poptarg);
 		      break;
-            case 't': 
-            case 'T': end_time = atof(poptarg);
+	    case 't': t_min = atof(poptarg);
+	              break;
+            case 'T': t_max = atof(poptarg);
 		      break;
             case 'I': I_flag = true;
 		      input_filename = poptarg;
@@ -335,7 +328,10 @@ int main(int argc, char ** argv) {
 	              break;
 	    case 's': input_seed = atoi(poptarg);
 		      break;
-            case 'z': metal = atof(poptarg);
+            case 'z': z_min = atof(poptarg);
+	              metal = z_min;
+	              break;
+            case 'Z': z_max = atof(poptarg);
 	              break;
             case 'C': strcpy(star_type_string, poptarg);
 	              primary_type = extract_stellar_type_string(star_type_string);
@@ -349,15 +345,15 @@ int main(int argc, char ** argv) {
 
     int actual_seed = srandinter(input_seed);
     cerr << "random number generator seed = " << actual_seed << endl;
-    sprintf(paramlog, 
-"   alpha  = %3.1f\n   lambda = %3.1f\n   beta   = %3.1f\n   gamma  = %4.2f\n   CE_method = %d\n   Jloss_method = %d \n",
+    sprintf(paramlog,
+	   "   alpha  = %3.1f\n   lambda = %3.1f\n   beta   = %3.1f\n   gamma  = %4.2f\n   CE_method = %d\n   Jloss_method = %d \n",
 	    cnsts.parameters(common_envelope_efficiency),
 	    cnsts.parameters(envelope_binding_energy),
 	    cnsts.parameters(specific_angular_momentum_loss),
 	    cnsts.parameters(dynamic_mass_transfer_gamma),
             cnsts.use_common_envelope_method(),
-	    cnsts.use_jloss_method()
-	    );
+            cnsts.use_jloss_method()
+          );
 
     if (n <= 0) err_exit("mknodes: N > 0 required!");
 
@@ -392,7 +388,7 @@ int main(int argc, char ** argv) {
     root->log_history(argc, argv);
     root->log_comment(seedlog);
     root->log_comment(paramlog);
-    root->print_log_story(cerr);
+    root->print_log_story(cout);
 
     print_initial_binary_distributions(m_min, m_max, mf, m_exp,
 				       q_min, q_max, qf, q_exp,
@@ -414,8 +410,11 @@ int main(int argc, char ** argv) {
                 return 0; 
     	   }    	   
     	   
-        z = metal;
-
+	//        z = metal;
+	z = general_power_law(z_min,z_max, -1);
+	//	end_time = general_power_law(t_min,t_max,0);
+	end_time = randinter(t_min,t_max);
+	
 	mkrandom_binary(m_min, m_max, mf, m_exp,
 			q_min, q_max, qf, q_exp,
 			a_min, a_max, af, a_exp,

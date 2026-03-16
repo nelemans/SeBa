@@ -143,7 +143,7 @@ real stellar_evolution_constants::common_envelope_lambda() {
 
 // SilT 8June 2022
 int stellar_evolution_constants::use_jloss_method() {
-    int jloss_parameter = 1; // SeBa default model
+     int jloss_parameter = 1; // SeBa default model
 //    jloss_parameter = 2; // specific J of orbit
 //    jloss_parameter = 3; // specific J of donor i.e. Jeans mode
 //    jloss_parameter = 4; // specific J of accretor i.e isotropic re-emission
@@ -165,7 +165,7 @@ int stellar_evolution_constants::use_black_hole_mass_method() {
 int stellar_evolution_constants::use_common_envelope_method() {
   int cc_parameter = 1; // default (use alpha-gamma)
   // cc_parameter = 2;     // default (use gamma-gamma)
-  //cc_parameter = 3;     // default (use alpha-alpha)
+  cc_parameter = 3;     // default (use alpha-alpha)
   return cc_parameter;
 }
 
@@ -411,7 +411,7 @@ real stellar_evolution_constants::parameters(model_parameter pm) {
 	      break;                          // (alpha_ce)
         case envelope_binding_energy:                  return 0.5;
 	      break;                          // (lambda)
-	case specific_angular_momentum_loss:           return 2.5;
+	case specific_angular_momentum_loss:           return 1.5;
 	      break;                          // (beta)
         case dynamic_mass_transfer_gamma:               return 1.75;
               break;			      // (gamma)

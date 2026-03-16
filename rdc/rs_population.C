@@ -132,7 +132,7 @@ local real contribution_to_population(real current_time,
 
 local int extract_population(SeBa_hist *hi, real snap_time,
 			     real tau, real int_cnst,
-			     real normalize) {
+			     real normalize, bool R_flag) {
 
     int binaries_read = 0;
     real total_number_of_binaries = 0;
@@ -192,7 +192,13 @@ local int extract_population(SeBa_hist *hi, real snap_time,
 
 	birthweight = contribution_to_population(snap_time, tstart, 
 						 tend, tau, int_cnst);
+
 	if(hj) {
+
+	  if (R_flag) {	    
+	    cout << birthweight <<" "<< *hj;
+	  }
+	  
 	  tpe_bin     = hj->get_binary_type();
 	  prim_type   = hj->get_primary_type();
 	  prim_mass   = hj->get_parameter(primary_mass);
@@ -305,19 +311,20 @@ local int extract_population(SeBa_hist *hi, real snap_time,
 //  main  --  driver to reduce SeBa short dump data
 //----------------------------------------------------------------------------
 
-main(int argc, char ** argv) {
+int main(int argc, char ** argv) {
 
     real normalize = -1;
     real snap_time = 0;
     real tau = 0;
     real cnst = 1;
+    bool R_flag = false;
 
     char  *comment;
     check_help();
 
     extern char *poptarg;
     int c;
-    char* param_string = "N:t:x:c:";
+    char* param_string = "N:t:x:c:R";
 
     while ((c = pgetopt(argc, argv, param_string)) != -1)
 	switch(c)
@@ -330,6 +337,8 @@ main(int argc, char ** argv) {
 		      break;
             case 'c': cnst = atof(poptarg);
 		      break;
+            case 'R': R_flag = true;
+		      break;		      
             case '?': params_to_usage(cerr, argv[0], param_string);
 		      get_help();
 		      exit(1);
@@ -344,7 +353,7 @@ main(int argc, char ** argv) {
     
 
     int binaries_read = extract_population(hi, snap_time, 
-					 tau, cnst, normalize);
+					   tau, cnst, normalize, R_flag);
 
     cerr << "Total number of binaries read: " << binaries_read << endl;
 }

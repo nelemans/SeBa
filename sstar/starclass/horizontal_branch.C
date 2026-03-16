@@ -325,6 +325,8 @@ real horizontal_branch::zeta_adiabatic() {
             //(SilT Sep 1 2010) Need factor 1.5 with new HPT tracks in order to get
             // stable mass transfer on early giant branch  
             r_dconv = 1.5* r_dconv;
+
+            r_dconv = 0; // switch off (GN 2025)
             if (radius < r_dconv)
                 return 4;
             else {
@@ -336,6 +338,9 @@ real horizontal_branch::zeta_adiabatic() {
                 real D = -75.6863;
                 real E = 57.8109;
                 
+                // Test something like Ge et al. 2020 results (their fig 9)
+                //return 10*x - 1;
+
                 return A + x*(B + x*(C + x*(D + x*E)));
                 
             }
@@ -361,7 +366,10 @@ real horizontal_branch::zeta_adiabatic() {
             real D = -75.6863;
             real E = 57.8109;
         
-            return A + x*(B + x*(C + x*(D + x*E)));
+            //return A + x*(B + x*(C + x*(D + x*E)));
+	    // Test something like Ge et al. 2020 results (their fig 9)
+            return 10*x - 1;
+
         }        
     }
 }

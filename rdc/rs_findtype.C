@@ -142,7 +142,7 @@ local void extract_binary_on_stellar_types(SeBa_hist *ha,
 //-----------------------------------------------------------------------------
 
 
-main(int argc, char ** argv) {
+int main(int argc, char ** argv) {
 
     bool  c_flag = false;
     bool  v_flag = false;
@@ -205,8 +205,8 @@ main(int argc, char ** argv) {
 		      break;
             case 'B': bt = extract_binary_type_string(poptarg);
 		      break;
-            case 'C': mt = extract_mass_transfer_type_string(poptarg);
-		      break;
+//           case 'C': mt = extract_mass_transfer_type_string(poptarg);
+//		      break;
             case 't': dt = atof(poptarg);
 		      break;
             case 'R': R_flag = true;

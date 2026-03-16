@@ -545,7 +545,10 @@ real helium_giant::zeta_adiabatic() {
      	real C = 32.0344;
      	real D = -75.6863;
      	real E = 57.8109;
- 	z = A + x*(B + x*(C + x*(D + x*E)));
+ 	    z = A + x*(B + x*(C + x*(D + x*E)));
+        
+        // Test something like Ge et al. 2020 results (their fig 9)
+        //return 10*x - 1;
      	return z;
       }
 }

@@ -604,28 +604,28 @@ void print_binary_matric(int **population) {
 
 int main(int argc, char ** argv) {
 
-    bool  c_flag = false;
-    bool  v_flag = false;
-    bool  R_flag = false;
-    bool  first_occasion = false;
+  bool  c_flag = false;
+  bool  v_flag = false;
+  bool  R_flag = false;
+  bool  first_occasion = false;
     
-    char * primary_type_string = "bla";
-    char * secondary_type_string = "bla";
+  char * primary_type_string = "bla";
+  char * secondary_type_string = "bla";
 
-    binary_type bt = Detached;
+  binary_type bt = Detached;
 
-    real a_max = VERY_LARGE_NUMBER;
-    real a_min = 0;
-    real mp_max = VERY_LARGE_NUMBER;
-    real mp_min = 0;
-    real ms_max = VERY_LARGE_NUMBER;
-    real ms_min = 0;
-    real e_max = 1;
-    real e_min = 0;
-    real q_max = VERY_LARGE_NUMBER;
-    real q_min = 0;
-    real dt = 1.37e4;
-    real metal = cnsts.parameters(Zsun);
+  real a_max = VERY_LARGE_NUMBER;
+  real a_min = 0;
+  real mp_max = VERY_LARGE_NUMBER;
+  real mp_min = 0;
+  real ms_max = VERY_LARGE_NUMBER;
+  real ms_min = 0;
+  real e_max = 1;
+  real e_min = 0;
+  real q_max = VERY_LARGE_NUMBER;
+  real q_min = 0;
+  real dt = 1.37e4;
+  real metal = cnsts.parameters(Zsun);
 
     real snap_time = -1;
     bool T_flag = false;
@@ -640,7 +640,7 @@ int main(int argc, char ** argv) {
     char* param_string = "P:p:S:s:B:A:a:M:m:N:n:E:e:Q:q:fc:t:vRT:z:";
 
     while ((c = pgetopt(argc, argv, param_string)) != -1)
-	switch(c)
+	  switch(c)
 	    {
 	    case 'A': a_max = atof(poptarg);
 		      break;
@@ -765,7 +765,7 @@ start:
 
       if (hi->get_last()->get_binary_type() == Merged) 
 	mergers++;
-//	cerr << hi->get_parameter(identity) << endl;
+	cerr << hi->get_parameter(identity) << endl;
 
       if(!T_flag) {
 	extract_binary_on_stellar_types(hi, primary_type_string,
