@@ -326,7 +326,7 @@ real horizontal_branch::zeta_adiabatic() {
             // stable mass transfer on early giant branch  
             r_dconv = 1.5* r_dconv;
 
-            r_dconv = 0; // switch off (GN 2025)
+            //r_dconv = 0; // switch off (GN 2025)
             if (radius < r_dconv)
                 return 4;
             else {
@@ -366,9 +366,9 @@ real horizontal_branch::zeta_adiabatic() {
             real D = -75.6863;
             real E = 57.8109;
         
-            //return A + x*(B + x*(C + x*(D + x*E)));
+            return A + x*(B + x*(C + x*(D + x*E)));
 	    // Test something like Ge et al. 2020 results (their fig 9)
-            return 10*x - 1;
+         //   return 10*x - 1;
 
         }        
     }
@@ -377,6 +377,12 @@ real horizontal_branch::zeta_adiabatic() {
 real horizontal_branch::zeta_thermal() {
 
 //      return 15;
+
+   // (GN Jan 2025) test method to ensure thermal time scale mass transfer until radius back to equilibrium radius
+    if (effective_radius < 0.98*radius) {
+        return -10;
+    }
+
 
     // (SilT 25 October 2010) new tracks require new zeta
     // definition of horizontal branch changed

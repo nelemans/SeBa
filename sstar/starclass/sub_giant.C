@@ -688,7 +688,7 @@ real sub_giant::zeta_adiabatic() {
     //(SilT Sep 1 2010) Need factor 1.5 with new HPT tracks in order to get
    // stable mass transfer on early giant branch  
     r_dconv = 1.5* r_dconv;
-    r_dconv = 0; // switch off (GN 2025)
+    //r_dconv = 0; // switch off (GN 2025)
   if (radius < r_dconv) {
 
     return 4;

@@ -258,7 +258,7 @@ int main(int argc, char ** argv) {
 
     int input_seed=0; 
     char seedlog[64];
-    char paramlog[110];
+    char paramlog[120];
 
     //check_help();
 
@@ -282,10 +282,10 @@ int main(int argc, char ** argv) {
 		      break;
             case 'x': m_exp = atof(poptarg);
 		      break;
-	    case 'F': F_flag = true;
+	        case 'F': F_flag = true;
 		      strcpy(mfc, poptarg);
 	              break;
-	    case 'f': mf = (mass_function)atoi(poptarg);
+	        case 'f': mf = (mass_function)atoi(poptarg);
 	              break;
             case 'A': a_max = atof(poptarg);
 		      break;
@@ -293,10 +293,10 @@ int main(int argc, char ** argv) {
 		      break;
             case 'y': a_exp = atof(poptarg);
 		      break;
-	    case 'G': G_flag = true;
+	        case 'G': G_flag = true;
 		      strcpy(afc, poptarg);
 	              break;
-	    case 'g': af = (sma_distribution)atoi(poptarg);
+	       case 'g': af = (sma_distribution)atoi(poptarg);
 	              break;
             case 'E': e_max = atof(poptarg);
 		      break;
@@ -304,10 +304,10 @@ int main(int argc, char ** argv) {
 		      break;
             case 'v': e_exp = atof(poptarg);
 		      break;
-	    case 'U': U_flag = true;
+	       case 'U': U_flag = true;
 		      strcpy(efc, poptarg);
 	              break;
-	    case 'u': ef = (ecc_distribution)atoi(poptarg);
+	       case 'u': ef = (ecc_distribution)atoi(poptarg);
 	              break;
             case 'Q': q_max = atof(poptarg);
 		      break;
@@ -324,40 +324,40 @@ int main(int argc, char ** argv) {
 		      break;
             case 'w': q_exp = atof(poptarg);
 		      break;
-	    case 'P': P_flag = true;
+	       case 'P': P_flag = true;
 		      strcpy(qfc, poptarg);
 	              break;
-	    case 'p': qf = (mass_ratio_distribution)atoi(poptarg);
+	       case 'p': qf = (mass_ratio_distribution)atoi(poptarg);
 	              break;
-	    case 'n': n = atoi(poptarg);
+	       case 'n': n = atoi(poptarg);
 	              break;
-	    case 'N': n_init = atoi(poptarg);
+	       case 'N': n_init = atoi(poptarg);
 	              break;
-	    case 's': input_seed = atoi(poptarg);
+	       case 's': input_seed = atoi(poptarg);
 		      break;
-            case 'z': metal = atof(poptarg);
-	              break;
-            case 'C': strcpy(star_type_string, poptarg);
-	              primary_type = extract_stellar_type_string(star_type_string);
-                      break;
-            case 'c': strcpy(star_type_string, poptarg);
-	              secondary_type = extract_stellar_type_string(star_type_string);
-                      break;
+           case 'z': metal = atof(poptarg);
+                break;
+           case 'C': strcpy(star_type_string, poptarg);
+	           primary_type = extract_stellar_type_string(star_type_string);
+                break;
+           case 'c': strcpy(star_type_string, poptarg);
+	           secondary_type = extract_stellar_type_string(star_type_string);
+                break;
             case '?': params_to_usage(cerr, argv[0], param_string);
 		      exit(1);
 	}
 
     int actual_seed = srandinter(input_seed);
     cerr << "random number generator seed = " << actual_seed << endl;
-    sprintf(paramlog, 
-"   alpha  = %3.1f\n   lambda = %3.1f\n   beta   = %3.1f\n   gamma  = %4.2f\n   CE_method = %d\n   Jloss_method = %d \n",
+    sprintf(paramlog,
+	   "   alpha  = %3.1f\n   lambda = %3.1f\n   beta   = %3.1f\n   gamma  = %4.2f\n   CE_method = %d\n   Jloss_method = %d \n",
 	    cnsts.parameters(common_envelope_efficiency),
 	    cnsts.parameters(envelope_binding_energy),
 	    cnsts.parameters(specific_angular_momentum_loss),
 	    cnsts.parameters(dynamic_mass_transfer_gamma),
             cnsts.use_common_envelope_method(),
-	    cnsts.use_jloss_method()
-	    );
+            cnsts.use_jloss_method()
+          );
 
     if (n <= 0) err_exit("mknodes: N > 0 required!");
 
